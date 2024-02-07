@@ -140,10 +140,14 @@ typedef unsigned int z_crc_t;
 
 // Begin RTC changes
 // This define is usually configured by cmake. We need to configure it manually.
-#if defined(RTC_LINUX_FAMILY) || defined(RTC_COCOA_FAMILY)
-#  define Z_HAVE_UNISTD_H
+#if !defined(RTC_WINDOWS_FAMILY)
+#  define HAVE_UNISTD_H
 #endif
 // End RTC changes
+
+#ifdef HAVE_UNISTD_H    /* may be set to #if 1 by configure/cmake/etc */
+#  define Z_HAVE_UNISTD_H
+#endif
 
 #ifdef NEED_PTRDIFF_T    /* may be set to #if 1 by configure/cmake/etc */
 typedef PTRDIFF_TYPE ptrdiff_t;
