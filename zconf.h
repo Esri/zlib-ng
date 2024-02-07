@@ -138,11 +138,12 @@ typedef void       *voidp;
 
 typedef unsigned int z_crc_t;
 
-// False for: Windows desktop
-// True for: Linux desktop
-#if defined(RTC_LINUX_DESKTOP)
+// Begin RTC changes
+// This define is usually configured by cmake. We need to configure it manually.
+#if defined(RTC_LINUX_FAMILY) || defined(RTC_COCOA_FAMILY)
 #  define Z_HAVE_UNISTD_H
 #endif
+// End RTC changes
 
 #ifdef NEED_PTRDIFF_T    /* may be set to #if 1 by configure/cmake/etc */
 typedef PTRDIFF_TYPE ptrdiff_t;
