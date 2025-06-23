@@ -11,6 +11,7 @@
 extern "C" {
 #  include "zbuild.h"
 #  include "zutil_p.h"
+#  include "arch_functions.h"
 #  include "../test_cpu_features.h"
 }
 
@@ -53,17 +54,30 @@ public:
         } \
         Bench(state, fptr); \
     } \
-    BENCHMARK_REGISTER_F(crc32, name)->Range(1, MAX_RANDOM_INTS_SIZE);
+    BENCHMARK_REGISTER_F(crc32, name)->Arg(1)->Arg(8)->Arg(12)->Arg(16)->Arg(32)->Arg(64)->Arg(512)->Arg(4<<10)->Arg(32<<10)->Arg(256<<10)->Arg(4096<<10);
 
 BENCHMARK_CRC32(braid, PREFIX(crc32_braid), 1);
 
+#ifdef DISABLE_RUNTIME_CPU_DETECTION
+BENCHMARK_CRC32(native, native_crc32, 1);
+#else
+
 #ifdef ARM_ACLE
 BENCHMARK_CRC32(acle, crc32_acle, test_cpu_features.arm.has_crc32);
-#elif defined(POWER8_VSX_CRC32)
+#endif
+#ifdef POWER8_VSX_CRC32
 BENCHMARK_CRC32(power8, crc32_power8, test_cpu_features.power.has_arch_2_07);
-#elif defined(S390_CRC32_VX)
+#endif
+#ifdef S390_CRC32_VX
 BENCHMARK_CRC32(vx, crc32_s390_vx, test_cpu_features.s390.has_vx);
-#elif defined(X86_PCLMULQDQ_CRC)
+#endif
+#ifdef X86_PCLMULQDQ_CRC
 /* CRC32 fold does a memory copy while hashing */
 BENCHMARK_CRC32(pclmulqdq, crc32_pclmulqdq, test_cpu_features.x86.has_pclmulqdq);
+#endif
+#ifdef X86_VPCLMULQDQ_CRC
+/* CRC32 fold does a memory copy while hashing */
+BENCHMARK_CRC32(vpclmulqdq, crc32_vpclmulqdq, (test_cpu_features.x86.has_pclmulqdq && test_cpu_features.x86.has_avx512_common && test_cpu_features.x86.has_vpclmulqdq));
+#endif
+
 #endif
