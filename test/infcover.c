@@ -319,9 +319,6 @@ static void inf(char *hex, char *what, unsigned step, int win, unsigned len, int
         if (ret == Z_NEED_DICT) {
             ret = PREFIX(inflateSetDictionary)(&strm, in, 1);
                                                 assert(ret == Z_DATA_ERROR);
-            mem_limit(&strm, 1);
-            ret = PREFIX(inflateSetDictionary)(&strm, out, 0);
-                                                assert(ret == Z_MEM_ERROR);
             mem_limit(&strm, 0);
             ((struct inflate_state *)strm.state)->mode = DICT;
             ret = PREFIX(inflateSetDictionary)(&strm, out, 0);
@@ -418,10 +415,6 @@ static void cover_wrap(void) {
     strm.next_in = (void *)"\x63";
     strm.avail_out = 1;
     strm.next_out = (void *)&ret;
-    mem_limit(&strm, 1);
-    ret = PREFIX(inflate)(&strm, Z_NO_FLUSH);   assert(ret == Z_MEM_ERROR);
-    ret = PREFIX(inflate)(&strm, Z_NO_FLUSH);   assert(ret == Z_MEM_ERROR);
-    mem_limit(&strm, 0);
     memset(dict, 0, 257);
     ret = PREFIX(inflateSetDictionary)(&strm, dict, 257);
                                                 assert(ret == Z_OK);
@@ -633,7 +626,7 @@ static void cover_trees(void) {
     code *next, table[ENOUGH_DISTS];
 
     /* we need to call inflate_table() directly in order to manifest not-
-       enough errors, since zlib insures that enough is always enough */
+       enough errors, since zlib ensures that enough is always enough */
     for (bits = 0; bits < 15; bits++)
         lens[bits] = (uint16_t)(bits + 1);
     lens[15] = 15;

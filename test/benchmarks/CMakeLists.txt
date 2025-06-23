@@ -2,9 +2,15 @@ cmake_minimum_required(VERSION 3.12)
 
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 11)
+endif()
+if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(NOT DEFINED CMAKE_CXX_EXTENSIONS)
+    set(CMAKE_CXX_EXTENSIONS ON)
+endif()
 
 enable_language(CXX)
 
@@ -38,9 +44,11 @@ add_executable(benchmark_zlib
     benchmark_adler32_copy.cc
     benchmark_compare256.cc
     benchmark_compare256_rle.cc
+    benchmark_compress.cc
     benchmark_crc32.cc
     benchmark_main.cc
     benchmark_slidehash.cc
+    benchmark_uncompress.cc
     )
 
 target_compile_definitions(benchmark_zlib PRIVATE -DBENCHMARK_STATIC_DEFINE)
