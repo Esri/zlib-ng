@@ -1,5 +1,5 @@
 /* zconf.h -- configuration of the zlib compression library
- * Copyright (C) 1995-2016 Jean-loup Gailly, Mark Adler
+ * Copyright (C) 1995-2024 Jean-loup Gailly, Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -145,7 +145,7 @@ typedef unsigned int z_crc_t;
 #endif
 // End RTC changes
 
-#ifdef HAVE_UNISTD_H    /* may be set to #if 1 by configure/cmake/etc */
+#if 0    /* was set to #if 0 by configure/cmake/etc */
 #  define Z_HAVE_UNISTD_H
 #endif
 

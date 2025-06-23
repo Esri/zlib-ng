@@ -3,7 +3,7 @@ from conans import ConanFile
 
 class ZlibNgConan(ConanFile):
     name = "zlib-ng"
-    version = "2.1.6"
+    version = "2.2.4"
     url = "https://github.com/Esri/zlib-ng/tree/runtimecore"
     license = "https://github.com/Esri/zlib-ng/blob/runtimecore/LICENSE.md"
     description = "zlib replacement with optimizations for \"next generation\" systems."
