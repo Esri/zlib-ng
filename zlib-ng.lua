@@ -85,18 +85,42 @@ if (_PLATFORM_WINDOWS) then
     "X86_SSE2",
     "X86_SSSE3",
     "X86_SSE42",
-    "X86_PCLMULQDQ_CRC"
+    "X86_PCLMULQDQ_CRC",
+    "X86_AVX2",
+    "X86_AVX512"
   }
   files {
     "arch/x86/x86_features.c",
+    -- WITH_SSE2
     "arch/x86/chunkset_sse2.c",
     "arch/x86/compare256_sse2.c",
     "arch/x86/slide_hash_sse2.c",
+    -- WITH_SSSE3
     "arch/x86/adler32_ssse3.c",
     "arch/x86/chunkset_ssse3.c",
+    -- WITH_SSE42
     "arch/x86/adler32_sse42.c",
-    "arch/x86/crc32_pclmulqdq.c"
+    -- WITH_PCLMULQDQ
+    "arch/x86/crc32_pclmulqdq.c",
+    -- WITH_AVX2
+    "arch/x86/slide_hash_avx2.c",
+    "arch/x86/chunkset_avx2.c",
+    "arch/x86/compare256_avx2.c",
+    "arch/x86/adler32_avx2.c",
+    -- WITH_AVX512
+    "arch/x86/adler32_avx512.c",
+    "arch/x86/chunkset_avx512.c"
   }
+
+  -- TODO Add /arch:AVX2 only for AVX2 files
+  --configuration { "arch/x86/*avx2.c" }
+  --  buildoptions { "/arch:AVX2" }
+
+  -- Add /arch:AVX512 only for AVX512 files
+  --configuration { "arch/x86/*avx512.c" }
+  --  buildoptions { "/arch:AVX512" }
+
+  --configuration {} -- reset configuration
 end
 
 if (_PLATFORM_WINUWP) then
