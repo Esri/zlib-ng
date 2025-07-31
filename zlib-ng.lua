@@ -88,7 +88,8 @@ if (_PLATFORM_WINDOWS) then
     "X86_PCLMULQDQ_CRC",
     "X86_AVX2",
     "X86_AVX512",
-    "X86_AVX512VNNI"
+    "X86_AVX512VNNI",
+    "X86_VPCLMULQDQ_CRC"
   }
   files {
     "arch/x86/x86_features.c",
@@ -112,7 +113,9 @@ if (_PLATFORM_WINDOWS) then
     "arch/x86/adler32_avx512.c",
     "arch/x86/chunkset_avx512.c",
     -- WITH_AVX512VNNI
-    "arch/x86/adler32_avx512_vnni.c"
+    "arch/x86/adler32_avx512_vnni.c",
+    -- WITH_VPCLMULQDQ
+    "arch/x86/crc32_vpclmulqdq.c",
   }
 
   -- TODO Add /arch:AVX2 only for AVX2 files
@@ -123,6 +126,8 @@ if (_PLATFORM_WINDOWS) then
   --configuration { "arch/x86/*avx512.c" }
   --  buildoptions { "/arch:AVX512" }
   --configuration { "arch/x86/adler32_avx512_vnni.c" }
+  --  buildoptions { "/arch:AVX512" }
+  --configuration { "arch/x86/crc32_vpclmulqdq.c" }
   --  buildoptions { "/arch:AVX512" }
 
   --configuration {} -- reset configuration
