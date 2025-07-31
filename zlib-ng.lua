@@ -76,6 +76,15 @@ if (_PLATFORM_MACOS) then
 end
 
 if (_PLATFORM_WINDOWS) then
+  -- TODO figure out how to filter this so it only applies to x86 Windows builds
+  -- configuration { "x32 or x64" }
+
+  defines {
+    "X86_FEATURES"
+  }
+  files {
+    "arch/x86/x86_features.c",
+  }
 end
 
 if (_PLATFORM_WINUWP) then
