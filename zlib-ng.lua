@@ -83,7 +83,9 @@ if (_PLATFORM_WINDOWS) then
     "X86_FEATURES",
     "X86_HAVE_XSAVE_INTRIN",
     "X86_SSE2",
-    "X86_SSSE3"
+    "X86_SSSE3",
+    "X86_SSE42",
+    "X86_PCLMULQDQ_CRC"
   }
   files {
     "arch/x86/x86_features.c",
@@ -91,7 +93,9 @@ if (_PLATFORM_WINDOWS) then
     "arch/x86/compare256_sse2.c",
     "arch/x86/slide_hash_sse2.c",
     "arch/x86/adler32_ssse3.c",
-    "arch/x86/chunkset_ssse3.c"
+    "arch/x86/chunkset_ssse3.c",
+    "arch/x86/adler32_sse42.c",
+    "arch/x86/crc32_pclmulqdq.c"
   }
 end
 
