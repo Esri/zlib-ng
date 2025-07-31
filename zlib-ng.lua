@@ -80,7 +80,8 @@ if (_PLATFORM_WINDOWS) then
   -- configuration { "x32 or x64" }
 
   defines {
-    "X86_FEATURES"
+    "X86_FEATURES",
+    "X86_HAVE_XSAVE_INTRIN"
   }
   files {
     "arch/x86/x86_features.c",
