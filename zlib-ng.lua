@@ -81,10 +81,14 @@ if (_PLATFORM_WINDOWS) then
 
   defines {
     "X86_FEATURES",
-    "X86_HAVE_XSAVE_INTRIN"
+    "X86_HAVE_XSAVE_INTRIN",
+    "X86_SSE2"
   }
   files {
     "arch/x86/x86_features.c",
+    "arch/x86/chunkset_sse2.c",
+    "arch/x86/compare256_sse2.c",
+    "arch/x86/slide_hash_sse2.c"
   }
 end
 
