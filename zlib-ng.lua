@@ -81,7 +81,7 @@ if (_PLATFORM_WINDOWS) then
 
   defines {
     "X86_FEATURES",
-    "X86_HAVE_XSAVE_INTRIN",
+    --"X86_HAVE_XSAVE_INTRIN",
     "X86_SSE2",
     "X86_SSSE3",
     "X86_SSE42",
@@ -91,7 +91,7 @@ if (_PLATFORM_WINDOWS) then
     "X86_AVX512VNNI",
     "X86_VPCLMULQDQ_CRC"
   }
-  files {
+  files { -- This is all the files matching arch/x86/*.c
     "arch/x86/x86_features.c",
     -- WITH_SSE2
     "arch/x86/chunkset_sse2.c",
