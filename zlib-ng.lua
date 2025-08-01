@@ -49,6 +49,23 @@ files  {
     "trees.c",
     "uncompr.c",
     "zutil.c",
+    -- x86 specific files, conditionally enabled with #ifdef pragmas
+    "arch/x86/x86_features.c",
+    "arch/x86/chunkset_sse2.c",
+    "arch/x86/compare256_sse2.c",
+    "arch/x86/slide_hash_sse2.c",
+    "arch/x86/adler32_ssse3.c",
+    "arch/x86/chunkset_ssse3.c",
+    "arch/x86/adler32_sse42.c",
+    "arch/x86/crc32_pclmulqdq.c",
+    "arch/x86/slide_hash_avx2.c",
+    "arch/x86/chunkset_avx2.c",
+    "arch/x86/compare256_avx2.c",
+    "arch/x86/adler32_avx2.c",
+    "arch/x86/adler32_avx512.c",
+    "arch/x86/chunkset_avx512.c",
+    "arch/x86/adler32_avx512_vnni.c",
+    "arch/x86/crc32_vpclmulqdq.c",
 }
 
 if (_PLATFORM_ANDROID) then
@@ -76,7 +93,7 @@ if (_PLATFORM_MACOS) then
 end
 
 if (_PLATFORM_WINDOWS) then
-  configuration { "x64" }
+  configuration { "x32 or x64" }
 
   defines {
     "X86_FEATURES",
@@ -89,33 +106,6 @@ if (_PLATFORM_WINDOWS) then
     "X86_AVX512",
     "X86_AVX512VNNI",
     "X86_VPCLMULQDQ_CRC"
-  }
-
-  files { -- This is all the files matching arch/x86/*.c
-    "arch/x86/x86_features.c",
-    -- WITH_SSE2
-    "arch/x86/chunkset_sse2.c",
-    "arch/x86/compare256_sse2.c",
-    "arch/x86/slide_hash_sse2.c",
-    -- WITH_SSSE3
-    "arch/x86/adler32_ssse3.c",
-    "arch/x86/chunkset_ssse3.c",
-    -- WITH_SSE42
-    "arch/x86/adler32_sse42.c",
-    -- WITH_PCLMULQDQ
-    "arch/x86/crc32_pclmulqdq.c",
-    -- WITH_AVX2
-    "arch/x86/slide_hash_avx2.c",
-    "arch/x86/chunkset_avx2.c",
-    "arch/x86/compare256_avx2.c",
-    "arch/x86/adler32_avx2.c",
-    -- WITH_AVX512
-    "arch/x86/adler32_avx512.c",
-    "arch/x86/chunkset_avx512.c",
-    -- WITH_AVX512VNNI
-    "arch/x86/adler32_avx512_vnni.c",
-    -- WITH_VPCLMULQDQ
-    "arch/x86/crc32_vpclmulqdq.c",
   }
 
   -- TODO Add /arch:AVX2 only for AVX2 files
