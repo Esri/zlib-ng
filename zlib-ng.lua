@@ -76,8 +76,7 @@ if (_PLATFORM_MACOS) then
 end
 
 if (_PLATFORM_WINDOWS) then
-  -- TODO figure out how to filter this so it only applies to x86 Windows builds
-  -- configuration { "x32 or x64" }
+  configuration { "x64" }
 
   defines {
     "X86_FEATURES",
@@ -91,6 +90,7 @@ if (_PLATFORM_WINDOWS) then
     "X86_AVX512VNNI",
     "X86_VPCLMULQDQ_CRC"
   }
+
   files { -- This is all the files matching arch/x86/*.c
     "arch/x86/x86_features.c",
     -- WITH_SSE2
@@ -129,8 +129,6 @@ if (_PLATFORM_WINDOWS) then
   --  buildoptions { "/arch:AVX512" }
   --configuration { "arch/x86/crc32_vpclmulqdq.c" }
   --  buildoptions { "/arch:AVX512" }
-
-  --configuration {} -- reset configuration
 end
 
 if (_PLATFORM_WINUWP) then
