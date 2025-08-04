@@ -49,7 +49,7 @@ files  {
     "trees.c",
     "uncompr.c",
     "zutil.c",
-    -- x86 specific files, conditionally enabled with #ifdef pragmas
+    -- x86 specific files, conditionally enabled via #ifdef directives in source
     "arch/x86/x86_features.c",
     "arch/x86/chunkset_sse2.c",
     "arch/x86/compare256_sse2.c",
@@ -92,33 +92,37 @@ if (_PLATFORM_MACOS) then
   }
 end
 
+local intel_defines = {
+  "X86_FEATURES",
+
+  -- Disable X86_HAVE_XSAVE_INTRIN because the XSAVE instructions were added with the Penryn microarchitecture
+  -- beginning August 2008 [1] which is newer than our current minimum of the Core microarchitecture from June 2006 [2][3].
+  -- [1] https://en.wikipedia.org/wiki/Penryn_(microarchitecture)#:~:text=Stepping%20E0/R0%20adds%20two%20new%20instructions%20(XSAVE/XRSTOR)
+  -- [2] https://en.wikipedia.org/wiki/SSSE3#:~:text=SSSE3%20was%20first%20introduced%20with%20Intel%20processors%20based%20on%20the%20Core%20microarchitecture%20on%20June%2026%2C%202006
+  -- [3] https://devtopia.esri.com/runtime/devops/issues/987
+  --"X86_HAVE_XSAVE_INTRIN",
+
+  "X86_SSE2",
+  "X86_SSSE3",
+  "X86_SSE42",
+  "X86_PCLMULQDQ_CRC",
+  "X86_AVX2",
+  "X86_AVX512",
+  "X86_AVX512VNNI",
+  "X86_VPCLMULQDQ_CRC"
+}
+
 if (_PLATFORM_WINDOWS) then
   configuration { "x32 or x64" }
 
-  defines {
-    "X86_FEATURES",
-    --"X86_HAVE_XSAVE_INTRIN",
-    "X86_SSE2",
-    "X86_SSSE3",
-    "X86_SSE42",
-    "X86_PCLMULQDQ_CRC",
-    "X86_AVX2",
-    "X86_AVX512",
-    "X86_AVX512VNNI",
-    "X86_VPCLMULQDQ_CRC"
-  }
+  defines { intel_defines }
 
-  -- TODO Add /arch:AVX2 only for AVX2 files
-  --configuration { "arch/x86/*avx2.c" }
-  --  buildoptions { "/arch:AVX2" }
-
-  -- Add /arch:AVX512 only for AVX512 files
-  --configuration { "arch/x86/*avx512.c" }
-  --  buildoptions { "/arch:AVX512" }
-  --configuration { "arch/x86/adler32_avx512_vnni.c" }
-  --  buildoptions { "/arch:AVX512" }
-  --configuration { "arch/x86/crc32_vpclmulqdq.c" }
-  --  buildoptions { "/arch:AVX512" }
+  -- NB: On Windows, the zlib-ng cmake configuration adds the /arch:AVX2 and /arch:AVX512 flags to the msvc build flags
+  -- for the files that use AVX2 and AVX512 intrinsics.
+  -- This is a problem with premake because it does not support setting different build flags at the file level.
+  -- However, I don't think these flags are actually necessary, because the cpu intrinsics are used via explicit
+  -- function calls. (See Raymond Chen's comment on this Stack Overflow question for context:
+  -- https://stackoverflow.com/q/57823543)
 end
 
 if (_PLATFORM_WINUWP) then
