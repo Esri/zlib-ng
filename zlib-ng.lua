@@ -85,8 +85,13 @@ if (_PLATFORM_ANDROID) then
     "HAVE_ATTRIBUTE_ALIGNED"
   }
 
+  -- Define a limited subset
   configuration {"*x86* or *x64*"}
-  defines { intel_defines }
+  defines {
+    "X86_FEATURES",
+    "X86_SSE2",
+    "X86_SSSE3"
+  }
 end
 
 if (_PLATFORM_IOS) then
@@ -95,7 +100,11 @@ if (_PLATFORM_IOS) then
   }
 
   configuration { "*catx64* or *simx64*" }
-  defines { intel_defines }
+  defines {
+    "X86_FEATURES",
+    "X86_SSE2",
+    "X86_SSSE3"
+  }
 end
 
 if (_PLATFORM_LINUX) then
@@ -104,7 +113,11 @@ if (_PLATFORM_LINUX) then
   }
 
   configuration { "x64"}
-  defines { intel_defines }
+  defines {
+    "X86_FEATURES",
+    "X86_SSE2",
+    "X86_SSSE3"
+  }
 end
 
 if (_PLATFORM_MACOS) then
