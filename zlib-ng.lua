@@ -16,6 +16,27 @@ defines {
     --"WITH_GZFILEOP"
 }
 
+-- Enable support for Intel CPU intrinsics up to SSSE3
+local intel_defines_basic = {
+  "X86_FEATURES",
+  "X86_SSE2",
+  "X86_SSSE3"
+}
+
+-- Enable support for all Intel CPU intrinsics. Windows and macOS are able to build these source files without complaint
+-- and dynamically enable support for CPU intrinsics beyond SSSE3.
+local intel_defines_advanced = {
+  "X86_FEATURES",
+  "X86_SSE2",
+  "X86_SSSE3",
+  "X86_SSE42",
+  "X86_PCLMULQDQ_CRC",
+  "X86_AVX2",
+  "X86_AVX512",
+  "X86_AVX512VNNI",
+  "X86_VPCLMULQDQ_CRC"
+}
+
 files  {
     "adler32.c",
     "arch/generic/adler32_c.c",
@@ -49,33 +70,64 @@ files  {
     "trees.c",
     "uncompr.c",
     "zutil.c",
+    -- x86 specific files, conditionally enabled via #ifdef directives in source
+    "arch/x86/x86_features.c",
+    "arch/x86/chunkset_sse2.c",
+    "arch/x86/compare256_sse2.c",
+    "arch/x86/slide_hash_sse2.c",
+    "arch/x86/adler32_ssse3.c",
+    "arch/x86/chunkset_ssse3.c",
+    "arch/x86/adler32_sse42.c",
+    "arch/x86/crc32_pclmulqdq.c",
+    "arch/x86/slide_hash_avx2.c",
+    "arch/x86/chunkset_avx2.c",
+    "arch/x86/compare256_avx2.c",
+    "arch/x86/adler32_avx2.c",
+    "arch/x86/adler32_avx512.c",
+    "arch/x86/chunkset_avx512.c",
+    "arch/x86/adler32_avx512_vnni.c",
+    "arch/x86/crc32_vpclmulqdq.c",
 }
 
 if (_PLATFORM_ANDROID) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration {"*x86* or *x64*"}
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_IOS) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "*catx64* or *simx64*" }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_LINUX) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "x64"}
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_MACOS) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "x64"}
+  defines { intel_defines_advanced }
 end
 
 if (_PLATFORM_WINDOWS) then
+  configuration { "x32 or x64" }
+  defines { intel_defines_advanced }
 end
 
 if (_PLATFORM_WINUWP) then
