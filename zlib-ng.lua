@@ -16,7 +16,16 @@ defines {
     --"WITH_GZFILEOP"
 }
 
-local intel_defines = {
+-- Enable support for Intel CPU intrinsics up to SSSE3
+local intel_defines_basic = {
+  "X86_FEATURES",
+  "X86_SSE2",
+  "X86_SSSE3"
+}
+
+-- Enable support for all Intel CPU intrinsics. Windows and macOS are able to build these source files without complaint
+-- and dynamically enable support for CPU intrinsics beyond SSSE3.
+local intel_defines_advanced = {
   "X86_FEATURES",
   "X86_SSE2",
   "X86_SSSE3",
@@ -85,13 +94,8 @@ if (_PLATFORM_ANDROID) then
     "HAVE_ATTRIBUTE_ALIGNED"
   }
 
-  -- Define a limited subset
   configuration {"*x86* or *x64*"}
-  defines {
-    "X86_FEATURES",
-    "X86_SSE2",
-    "X86_SSSE3"
-  }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_IOS) then
@@ -100,11 +104,7 @@ if (_PLATFORM_IOS) then
   }
 
   configuration { "*catx64* or *simx64*" }
-  defines {
-    "X86_FEATURES",
-    "X86_SSE2",
-    "X86_SSSE3"
-  }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_LINUX) then
@@ -113,11 +113,7 @@ if (_PLATFORM_LINUX) then
   }
 
   configuration { "x64"}
-  defines {
-    "X86_FEATURES",
-    "X86_SSE2",
-    "X86_SSSE3"
-  }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_MACOS) then
@@ -126,12 +122,12 @@ if (_PLATFORM_MACOS) then
   }
 
   configuration { "x64"}
-  defines { intel_defines }
+  defines { intel_defines_advanced }
 end
 
 if (_PLATFORM_WINDOWS) then
   configuration { "x32 or x64" }
-  defines { intel_defines }
+  defines { intel_defines_advanced }
 end
 
 if (_PLATFORM_WINUWP) then
