@@ -16,6 +16,16 @@ defines {
     --"WITH_GZFILEOP"
 }
 
+-- Enable support for Intel CPU intrinsics up to SSSE3.
+-- zlib-ng supports more advanced Intel CPU intrinsics, and can enable support dynamically based on the detected CPU
+-- features. However, to support this in premake, we would need to be able to specify different build flags for
+-- different files, which is not supported directly in premake 4.
+local intel_defines_basic = {
+  "X86_FEATURES",
+  "X86_SSE2",
+  "X86_SSSE3"
+}
+
 files  {
     "adler32.c",
     "arch/generic/adler32_c.c",
@@ -49,33 +59,54 @@ files  {
     "trees.c",
     "uncompr.c",
     "zutil.c",
+    -- x86 specific files, conditionally enabled via #ifdef directives in source
+    "arch/x86/x86_features.c",
+    "arch/x86/chunkset_sse2.c",
+    "arch/x86/compare256_sse2.c",
+    "arch/x86/slide_hash_sse2.c",
+    "arch/x86/adler32_ssse3.c",
+    "arch/x86/chunkset_ssse3.c",
 }
 
 if (_PLATFORM_ANDROID) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration {"*x86* or *x64*"}
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_IOS) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "*catx64* or *simx64*" }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_LINUX) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "x64"}
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_MACOS) then
   defines {
     "HAVE_ATTRIBUTE_ALIGNED"
   }
+
+  configuration { "x64"}
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_WINDOWS) then
+  configuration { "x32 or x64" }
+  defines { intel_defines_basic }
 end
 
 if (_PLATFORM_WINUWP) then
