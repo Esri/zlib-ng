@@ -145,7 +145,7 @@ typedef unsigned int z_crc_t;
 #endif
 // End RTC changes
 
-#if 0    /* was set to #if 0 by configure/cmake/etc */
+#ifdef HAVE_UNISTD_H    /* may be set to #if 1 by configure/cmake/etc */
 #  define Z_HAVE_UNISTD_H
 #endif
 
