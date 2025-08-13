@@ -41,14 +41,6 @@ local arm_defines_neon = {
   "ARM_NEON_HASLD4",
 }
 
--- Enable support for NEON intrinsics and ACLE on ARM
-local arm_defines_neon_and_acle = {
-  "ARM_FEATURES",
-  "ARM_NEON",
-  "ARM_NEON_HASLD4",
-  "ARM_ACLE",
-}
-
 files  {
     "adler32.c",
     "arch/generic/adler32_c.c",
@@ -95,7 +87,6 @@ files  {
     "arch/arm/chunkset_neon.c",
     "arch/arm/compare256_neon.c",
     "arch/arm/slide_hash_neon.c",
-    "arch/arm/crc32_acle.c",
 }
 
 if (_PLATFORM_ANDROID) then
@@ -104,16 +95,8 @@ if (_PLATFORM_ANDROID) then
   configuration {"*x86* or *x64*"}
   defines { intel_defines_basic }
 
-  -- armv7 does not have support for ACLE
-  configuration { "*armv7*" }
+  configuration { "*armv7* or *arm64*" }
   defines { arm_defines_neon }
-
-  -- arm64 has support for ACLE
-  configuration { "*arm64*" }
-  defines {
-    "HAVE_ARM_ACLE_H",
-    arm_defines_neon_and_acle,
-  }
 end
 
 if (_PLATFORM_IOS) then
@@ -123,10 +106,7 @@ if (_PLATFORM_IOS) then
   defines { intel_defines_basic }
 
   configuration { "*_arm64_* or *catarm64* or *simarm64*" }
-  defines {
-    "HAVE_ARM_ACLE_H",
-    arm_defines_neon_and_acle,
-  }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_LINUX) then
@@ -136,10 +116,7 @@ if (_PLATFORM_LINUX) then
   defines { intel_defines_basic }
 
   configuration { "ARM64"}
-  defines {
-    "HAVE_ARM_ACLE_H",
-    arm_defines_neon_and_acle,
-  }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_MACOS) then
@@ -149,10 +126,7 @@ if (_PLATFORM_MACOS) then
   defines { intel_defines_basic }
 
   configuration { "ARM64" }
-  defines {
-    "HAVE_ARM_ACLE_H",
-    arm_defines_neon_and_acle,
-  }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_WINDOWS) then
@@ -160,7 +134,7 @@ if (_PLATFORM_WINDOWS) then
   defines { intel_defines_basic }
 
   configuration { "ARM64"}
-  defines { arm_defines_neon_and_acle }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_WINUWP) then
