@@ -11,9 +11,17 @@ includedirs {
 }
 
 defines {
-    "ZLIB_COMPAT",
-    -- Support for gzfileops was included by default in the prev zlib library, but this functionality is not used in rtc, so safe to turn off.
-    --"WITH_GZFILEOP"
+  "ZLIB_COMPAT",
+  -- Support for gzfileops was included by default in the prev zlib library, but this functionality is not used in rtc, so safe to turn off.
+  --"WITH_GZFILEOP"
+}
+
+local clang_defines = {
+  -- clang supports __attribute__((aligned(x)))
+  "HAVE_ATTRIBUTE_ALIGNED",
+  -- clang supports the builtins __builtin_ctz and __builtin_ctzll
+  "HAVE_BUILTIN_CTZ", -- Needed to enable compare256_sse2.c
+  "HAVE_BUILTIN_CTZLL", -- Needed to enable compare256_neon.c
 }
 
 -- Enable support for Intel CPU intrinsics up to SSSE3.
@@ -23,7 +31,14 @@ defines {
 local intel_defines_basic = {
   "X86_FEATURES",
   "X86_SSE2",
-  "X86_SSSE3"
+  "X86_SSSE3",
+}
+
+-- Enable support for NEON intrinsics on ARM
+local arm_defines_neon = {
+  "ARM_FEATURES",
+  "ARM_NEON",
+  "ARM_NEON_HASLD4",
 }
 
 files  {
@@ -66,47 +81,60 @@ files  {
     "arch/x86/slide_hash_sse2.c",
     "arch/x86/adler32_ssse3.c",
     "arch/x86/chunkset_ssse3.c",
+    -- ARM specific files, conditionally enabled via #ifdef directives in source
+    "arch/arm/arm_features.c",
+    "arch/arm/adler32_neon.c",
+    "arch/arm/chunkset_neon.c",
+    "arch/arm/compare256_neon.c",
+    "arch/arm/slide_hash_neon.c",
 }
 
 if (_PLATFORM_ANDROID) then
-  defines {
-    "HAVE_ATTRIBUTE_ALIGNED"
-  }
+  defines { clang_defines }
 
   configuration {"*x86* or *x64*"}
   defines { intel_defines_basic }
+
+  configuration { "*armv7* or *arm64*" }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_IOS) then
-  defines {
-    "HAVE_ATTRIBUTE_ALIGNED"
-  }
+  defines { clang_defines }
 
   configuration { "*catx64* or *simx64*" }
   defines { intel_defines_basic }
+
+  configuration { "*_arm64_* or *catarm64* or *simarm64*" }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_LINUX) then
-  defines {
-    "HAVE_ATTRIBUTE_ALIGNED"
-  }
+  defines { clang_defines }
 
   configuration { "x64"}
   defines { intel_defines_basic }
+
+  configuration { "ARM64"}
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_MACOS) then
-  defines {
-    "HAVE_ATTRIBUTE_ALIGNED"
-  }
+  defines { clang_defines }
 
   configuration { "x64"}
   defines { intel_defines_basic }
+
+  configuration { "ARM64" }
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_WINDOWS) then
   configuration { "x32 or x64" }
   defines { intel_defines_basic }
+
+  configuration { "ARM64"}
+  defines { arm_defines_neon }
 end
 
 if (_PLATFORM_WINUWP) then

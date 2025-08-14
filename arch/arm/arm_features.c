@@ -1,3 +1,5 @@
+#ifdef ARM_FEATURES
+
 #include "zbuild.h"
 #include "arm_features.h"
 
@@ -113,3 +115,5 @@ void Z_INTERNAL arm_check_features(struct arm_cpu_features *features) {
 #endif
     features->has_crc32 = arm_has_crc32();
 }
+
+#endif
