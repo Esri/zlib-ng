@@ -32,6 +32,7 @@ local intel_defines_basic = {
   "X86_FEATURES",
   "X86_SSE2",
   "X86_SSSE3",
+  "X86_AVX2",
 }
 
 -- Enable support for NEON intrinsics on ARM
@@ -81,6 +82,7 @@ files  {
     "arch/x86/slide_hash_sse2.c",
     "arch/x86/adler32_ssse3.c",
     "arch/x86/chunkset_ssse3.c",
+    "arch/x86/chunkset_avx2.c",
     -- ARM specific files, conditionally enabled via #ifdef directives in source
     "arch/arm/arm_features.c",
     "arch/arm/adler32_neon.c",
